@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ProductsResponse } from '../../core/types/Product';
 import { makeRequest } from '../../core/utils/request';
 import ProductCard from './components/ProductCard';
+import ProductCardLoader from './components/Loaders/ProductCardLoader';
 import './styles.scss';
 
 
@@ -11,8 +12,7 @@ const Catalog = () =>{
        //quando a lista de produtos estiver disponivel
     //popilar um estado no componente e listar os produtos dinamicamente
     const [productsResponse, setProductResponse] = useState<ProductsResponse>();
-
-    console.log(productsResponse);
+    const [isLoading, setIsLoading] = useState(false);
 
     
  //QUando o componenti inciiar buscar a lista de produtos
@@ -23,9 +23,15 @@ const Catalog = () =>{
             linesPerPage: 12,
         }
 
-
+        //iniciar o loader
+        setIsLoading(true);
         makeRequest( { url: '/products' , params})
-        .then(response => setProductResponse(response.data));
+        .then(response => setProductResponse(response.data))
+        .finally( ()=> {
+//finalizar o loader
+        setIsLoading(false);
+
+        })
 
     }, [])
 
@@ -36,13 +42,16 @@ return(
         Catálogo de produtos
     </h1>
     <div className="catalog-products">
-    {productsResponse?.content.map(product => (
+       { isLoading ? <ProductCardLoader />: (
 
+productsResponse?.content.map(product => (
     <Link to={`/products/${product.id}`} key={product.id}>
          <ProductCard product={product}/>
           </Link>
+    ))
 
-    ))}
+       )}
+   
 
     </div>
 
