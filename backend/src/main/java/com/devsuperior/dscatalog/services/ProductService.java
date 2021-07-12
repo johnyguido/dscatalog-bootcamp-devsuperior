@@ -47,7 +47,7 @@ public class ProductService {
 	@Transactional
 	public ProductDTO insert(ProductDTO dto) {
 		Product entity = new Product();
-		copyDtoToentity(dto, entity);
+		copyDtoToEntity(dto, entity);
 		entity = repository.save(entity);
 		return new ProductDTO(entity);
 	}
@@ -57,7 +57,7 @@ public class ProductService {
 	public ProductDTO update(long id, ProductDTO dto) {
 		try {
 			Product entity = repository.getOne(id);
-			copyDtoToentity(dto, entity);
+			copyDtoToEntity(dto, entity);
 			entity = repository.save(entity);
 			return new ProductDTO(entity);
 		} catch (EntityNotFoundException e) {
@@ -76,7 +76,7 @@ public class ProductService {
 		}
 	}
 	
-	private void copyDtoToentity(ProductDTO dto, Product entity) {
+	private void copyDtoToEntity(ProductDTO dto, Product entity) {
 		entity.setName(dto.getName());
 		entity.setDescription(dto.getDescription());
 		entity.setDate(dto.getDate());
